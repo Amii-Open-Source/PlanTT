@@ -98,5 +98,6 @@ An example of output is shown below for an experiment with a budget of ```4``` s
 
 <img width="374" alt="program_output" src="https://github.com/AmiiThinks/nrc-ml-plant-genomics/assets/122919943/f287a467-52d2-4472-a1cd-4efdbe51b358">
 
-Each edit proposed is presented in the format ```(old_nucleotide -> proposed_nucleotide, nucleotide_position)```.
+Each edit proposed is presented in the format:   
+```(old_nucleotide -> proposed_nucleotide, nucleotide_position)```.
 
