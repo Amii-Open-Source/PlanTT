@@ -50,11 +50,11 @@ if __name__ == '__main__':
         dev = device('cpu')
     
     # Ask for the promoter sequence
-    promoter = input('\nEnter the 3kb sequence representing the promoter region: ').upper()
+    promoter = input('\nEnter the 1500bp sequence representing the promoter region: ').upper()
     validate_sequence_format(promoter)
     
     # Ask for the terminator sequence
-    terminator = input('\nEnter the 3kb sequence representing the terminator region: ').upper()
+    terminator = input('\nEnter the 1500bp sequence representing the terminator region: ').upper()
     validate_sequence_format(terminator)
     
     # Ask for the budget of single-base edits
