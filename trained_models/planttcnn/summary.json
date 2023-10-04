@@ -1,0 +1,12 @@
+{"training_time": 109.5,
+ "epochs": 171,
+ "valid_metrics": {
+  "Accuracy": 0.7083,
+  "BAccuracy": 0.7083,
+  "F1-score": 0.6923,
+  "Precision": 0.7325,
+  "Recall": 0.6563,
+  "SpearmanR": 0.5834,
+  "RSquared": 0.3941
+ }
+}
