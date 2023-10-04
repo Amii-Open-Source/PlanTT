@@ -94,10 +94,16 @@ The latter procedure requires the user to provide the promoter and terminator se
 
 
 To run the program, simply enter the command ```python edit_sequence.py``` and fill the requested information in the terminal.  
-An example of output is shown below for an experiment with a budget of ```4``` single-base edits.
+An example of output is shown below for an experiment with a budget of ```4``` single-base edits and randomly generated terminator and promoter sequences.
 
-<img width="374" alt="program_output" src="https://github.com/AmiiThinks/nrc-ml-plant-genomics/assets/122919943/f287a467-52d2-4472-a1cd-4efdbe51b358">
+Here is the terminal output:  
 
-Each edit proposed is presented in the format:   
+<img width="359" alt="program_output" src="https://github.com/AmiiThinks/PlanTT/assets/122919943/f41c2a97-1ab8-43ea-86ca-0d9277e175eb">
+
+Each edit proposed is presented in the format:    
 ```(old_nucleotide -> proposed_nucleotide, nucleotide_position)```.
+
+
+Here is the document ```edit_1.pdf``` mentioned in the last figure:  
+<img width="846" alt="edit_1" src="https://github.com/AmiiThinks/PlanTT/assets/122919943/d2fc570b-a9b7-4bec-8177-7b507ff00d18">
 
