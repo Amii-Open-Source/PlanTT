@@ -13,7 +13,7 @@ from transformers import BertTokenizer
 
 
 sys.path.append(abspath(join(__file__, *[pardir]*4)))
-from settings.paths import DNABERT, REVERSE_COMPLEMENT_MAP
+from settings.paths import DNABERT_HF, REVERSE_COMPLEMENT_MAP
 from src.data.modules.preprocessing import get_reverse_complement
 
 # Definition of the arguments parsing function
@@ -38,7 +38,7 @@ if __name__ == '__main__':
     args = get_args()
     
     # Initialize the tokenizer
-    tokenizer = BertTokenizer.from_pretrained(f'{DNABERT}_{args.k}')
+    tokenizer = BertTokenizer.from_pretrained(f'{DNABERT_HF}_{args.k}')
     
     # Initialize a ID to reverse complement ID map
     id_to_reverse_comp_id = {}
