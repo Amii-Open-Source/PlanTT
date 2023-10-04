@@ -2,6 +2,9 @@
 
 This code repository is associated to the paper entitled *"PlanTT: a two-tower contrastive approach for the prediction of gene expression difference in plants"*, which was submitted to RECOMB 24.
 
+![PlanTT](https://github.com/AmiiThinks/PlanTT/assets/122919943/374f0548-d9a3-4091-84d9-4baf368ec5b1)
+
+
 ## Project Tree :deciduous_tree:
 This section gives an overview of the project organization.
 ```
@@ -14,6 +17,7 @@ This section gives an overview of the project organization.
 │   ├── models                         -> Pytorch models (PlanTT and towers).
 │   ├── optimization                   -> Training modules.
 │   └── utils                          -> Other utilities such as custom metrics and loss functions.
+├── trained_models                     -> Weights and other files associated to trained PlanTT models.
 └── edit_sequence.py                   -> Gene editing program (see details further below).
 ```
 Note that each Python file in the GitHub repository is accompanied with a description of its purpose. 
@@ -86,7 +90,8 @@ PlanTT can be used to generate a list of single-base modifications that can be a
 The file ```edit_sequence.py``` offers a program that uses a trained version of ```PlanTT-CNN``` to generate such list for any gene.  
 The latter procedure requires the user to provide the promoter and terminator sequence of the gene of interest (see figure below).  
 
-![features](https://github.com/AmiiThinks/nrc-ml-plant-genomics/assets/122919943/579e0429-751f-4320-81fb-d5d8858bd3c5)
+![features](https://github.com/AmiiThinks/PlanTT/assets/122919943/702f0a1a-706a-4a3f-863b-43507bc5df8d)
+
 
 To run the program, simply enter the command ```python edit_sequence.py``` and fill the requested information in the terminal.  
 An example of output is shown below for an experiment with a budget of ```4``` single-base edits.
