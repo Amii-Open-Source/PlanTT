@@ -11,31 +11,31 @@ class Scaler(ABC):
     """
     Scaler abstract class
     """
-@abstractmethod
-def __call__(self, y: Tensor) -> Tensor:
-    """
-    Applies the scaling.
+    @abstractmethod
+    def __call__(self, y: Tensor) -> Tensor:
+        """
+        Applies the scaling.
 
-    Args:
-        y (Tensor): regression targets (N,)
+        Args:
+            y (Tensor): regression targets (N,)
 
-    Returns:
-        Tensor: scaled regression targets (N,)
-    """
-    raise NotImplementedError
+        Returns:
+            Tensor: scaled regression targets (N,)
+        """
+        raise NotImplementedError
 
-@abstractmethod
-def apply_inverse_transform(self, y: Tensor) -> Tensor:
-    """
-    Applies the reverse transformation.
-    
-    Args:
-        y (Tensor): scaled regression target predictions (N,)
+    @abstractmethod
+    def apply_inverse_transform(self, y: Tensor) -> Tensor:
+        """
+        Applies the reverse transformation.
+        
+        Args:
+            y (Tensor): scaled regression target predictions (N,)
 
-    Returns:
-        Tensor: regression target predictions in the original scale (N,)
-    """
-    raise NotImplementedError
+        Returns:
+            Tensor: regression target predictions in the original scale (N,)
+        """
+        raise NotImplementedError
 
 
 class MinMaxScaler(Scaler):
