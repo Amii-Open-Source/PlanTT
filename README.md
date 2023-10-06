@@ -58,7 +58,7 @@ git clone git@github.com:AmiiThinks/PlanTT.git
 Now that the repostiory is cloned, move to the ```settings``` directory and create a new conda environment
 using the provided ```.yml``` file.
 ```
-cd plantt/settings/
+cd PlanTT/settings/
 conda env create --file environment.yml
 ```
 Once the environment is created, activate it and return to the root of the project.
