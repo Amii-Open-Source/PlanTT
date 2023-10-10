@@ -19,7 +19,7 @@ def get_editing_strategy(plantt: PlanTT,
                          dev: device,
                          max_edits: int = 1,
                          batch_size: int = 1,
-                         save_figs: bool = True) -> tuple[list[tuple[str, int], float]]:
+                         save_figs: bool = True) -> list[tuple[str, int, int]]:
     """
     Generate a list of singe-base edits to increase the expression level of a gene.
 
@@ -33,10 +33,10 @@ def get_editing_strategy(plantt: PlanTT,
     
 
     Returns:
-        tuple[list[tuple[str, int], float]]: list of tuples showing the edits to be made and their location, total mRNA abundance difference predicted
+        tuple[list[tuple[str, int], list[float]]]: list of tuples showing the edits to be made, their location and the expected improvement
     """
-    # Initialize list containing the edits to make and a variable to track the total mRNA abundance change
-    edits, total = [], 0
+    # Initialize a list containing the edits to make
+    edits = []
     
     # For each iteration until the reach of the maximal budget of edits
     for i in range(max_edits):
@@ -60,13 +60,10 @@ def get_editing_strategy(plantt: PlanTT,
         
         else:
             
-            # Update the total
-            total += pred[x, y].item()
-            
             # Save the edit
             new_nucleotide = ONEHOT2NUC_MAPPING[x]
             old_nucleotide = ONEHOT2NUC_MAPPING[seq[0, y].nonzero().item()]
-            edits.append((f'{old_nucleotide}->{new_nucleotide}', y))
+            edits.append((f'{old_nucleotide}->{new_nucleotide}', y, int(pred[x, y].item())))
             
             # Modify the sequence
             seq[0, y] = Tensor(NUC2ONEHOT_MAPPING[new_nucleotide])
@@ -74,7 +71,7 @@ def get_editing_strategy(plantt: PlanTT,
             if save_figs:
                 save_editing_heatmap(predictions=pred.numpy(), arg_max=y, iteration=i)
             
-    return edits, total
+    return edits
             
             
 def generate_sequence_variations(seq: Tensor) -> Tensor:

@@ -66,7 +66,7 @@ def save_editing_heatmap(predictions: array,
     _, ax = plt.subplots(figsize=(5,1))
     start, stop = arg_max - 25, arg_max + 26
     heatmap(predictions[:, start:stop], ax=ax, linewidths=0.2, square=True, cmap='viridis', mask=(predictions[:, start:stop] == 0),
-            cbar_kws = dict(use_gridspec=False, location="top", fraction=0.22, aspect=120, shrink=0.45, label='mRNA abundance difference'))
+            cbar_kws = dict(use_gridspec=False, location="top", fraction=0.22, aspect=120, shrink=0.45, label='mRNA abundance rank difference'))
     ax.set_xticks(arange(0.5, (stop-start)+0.5, 5))
     ax.set_xticklabels(list(range(start, stop, 5)))
     ax.set_yticks([0.5, 1.5, 2.5, 3.5])

@@ -68,18 +68,20 @@ if __name__ == '__main__':
     plantt.load_state_dict(load(join(TRAINED_MODELS, 'planttcnn', 'planttcnn.pt')))
     
     # Find the editing strategy
-    edits, expected_improvement = get_editing_strategy(plantt=plantt,
-                                                       seq=encoded_seq,
-                                                       dev=dev,
-                                                       max_edits=budget,
-                                                       batch_size=BATCH_SIZE)
+    edits = get_editing_strategy(plantt=plantt,
+                                 seq=encoded_seq,
+                                 dev=dev,
+                                 max_edits=budget,
+                                 batch_size=BATCH_SIZE)
     
     # Print the results
     print('\nList of edits found: \n')
+    total = 0
     for i, e in enumerate(edits):
-        print(f'{i}. {e}')
+        print(f'{i}. Modification: {e[0]}, Position: {e[1]}, Rank expression improvement: {e[2]}')
+        total += e[2]
     
-    print(f'\nExpected improvement in mRNA abundance: {expected_improvement:.2f}\n')
+    print(f'\nExpected improvement in mRNA abundance: {total}\n')
     
     print(f'\nSee the following files to visualize the results:\n')
     for i in range(budget):
