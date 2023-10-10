@@ -98,12 +98,10 @@ An example of output is shown below for an experiment with a budget of ```4``` s
 
 Here is the terminal output:  
 
-<img width="359" alt="program_output" src="https://github.com/AmiiThinks/PlanTT/assets/122919943/f41c2a97-1ab8-43ea-86ca-0d9277e175eb">
+<img width="540" alt="program_output" src="https://github.com/AmiiThinks/PlanTT/assets/122919943/5574da3d-e071-4908-bb92-7d43738f1cc4">
 
-Each edit proposed is presented in the format:    
-```(old_nucleotide -> proposed_nucleotide, nucleotide_position)```.
+Here is the document ```edit_1.pdf``` mentioned in the last figure: 
 
+<img width="815" alt="program_edit_screenshot" src="https://github.com/AmiiThinks/PlanTT/assets/122919943/96f8d6e8-89c8-4781-a47b-e7a446699d11">
 
-Here is the document ```edit_1.pdf``` mentioned in the last figure:  
-<img width="846" alt="edit_1" src="https://github.com/AmiiThinks/PlanTT/assets/122919943/d2fc570b-a9b7-4bec-8177-7b507ff00d18">
 
