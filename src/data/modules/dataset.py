@@ -336,7 +336,7 @@ class OCMDataset(Dataset):
         Modifies data so the quantity of 0 and 1 labels are approximately the same.
 
         Args:
-            x (Tensor): sequences of one-hot encoded nucleotides (N x SEQ_LENGTH x 5).
+            x (Tensor): encoded gene sequences (N, 1, 6030, 5) or tokenized gene sequences (N, 2, NB_CHUNKS, 512)
             y_class (Tensor): binary classification labels.
             y_reg (Tensor): regression targets (rank differences).
 
@@ -356,8 +356,11 @@ class OCMDataset(Dataset):
             # Change the sign of concerned regression targets
             y_reg[idx] = OCMDataset.flip_reg_labels(y_reg[idx])
             
-            # Reverse the order of concerned sequences
-            x[idx] = flip(x[idx], dims=[1])
+            # Switch the order of concerned sequences
+            if x.shape[1] == 2: # If sequences are tokenized
+                x[idx] = flip(x[idx], dims=[1])
+            else:
+                x[idx] = cat([x[idx, :, 3000:, :], x[idx, :, :3000, :]], dim=-1)
             
         return x, y_class, y_reg
     
