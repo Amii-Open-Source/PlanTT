@@ -15,7 +15,7 @@ NUC2ONEHOT_MAPPING = {"A": [1, 0, 0, 0, 0],
                       }
 
 ONEHOT2NUC_MAPPING = {0: 'A', 1: 'C', 2: 'G', 3: 'T', 4: 'NX'}
-                      
+
 
 def get_reverse_complement(seq: str) -> str:
     """
@@ -38,7 +38,7 @@ def nucleotide_to_onehot(seq: str) -> Tensor:
         seq (str): sequence of nucleotides
 
     Returns:
-        Tensor: sequence represented using one-hot encodings (SEQ_LENGTH x 5)
+        Tensor: sequence represented using one-hot encodings (SEQ LENGTH, 5)
     """
     return Tensor([NUC2ONEHOT_MAPPING.get(nucleotide, [0, 0, 0, 0, 1]) for nucleotide in seq])
 
@@ -66,9 +66,12 @@ def seq_to_kmer_tokens(seq: str,
     
     Args:
         seq (str): sequence of nucleotides.
-        k (int, optional): length of k-mers. Defaults to 6.
+        k (int, optional): length of k-mers.
+                           Default to 6.
         stride (int, optional): step size in between each k-mers. 
-                                If stride < k, than two contiguous k-mers will share (k - stride) nucleotides. Defaults to 1.
+                                If stride < k, than two contiguous k-mers will share
+                                (k - stride) nucleotides. 
+                                Default to 1.
     Returns:
         list[str]: list of k-mers of length floor((len(seq) - k)/stride + 1)
     """
@@ -84,15 +87,17 @@ def split_tokens(tokens: list[str],
     
     Args:
         tokens (list[str]): list of tokens.
-        max_length (int, optional): maximum number of tokens included within each subsequence. Defaults to 512.
-        overlap (int, optional): number of tokens shared by two contiguous subsequence. Defaults to 256.
+        max_length (int, optional): maximum number of tokens included within each subsequence.
+                                    Defaults to 512.
+        overlap (int, optional): number of tokens shared by two contiguous subsequence. 
+                                 Defaults to 256.
 
     Returns:
         list[list[int]]: list of list of tokens
     """
     return [tokens[i:i+max_length] for i in range(0, len(tokens), max_length - overlap)]
-    
-    
+
+
 def add_padding(tokens_subseqs: list[list[int]],
                 padding_token_id: int,
                 max_length: int = 512,
@@ -104,52 +109,54 @@ def add_padding(tokens_subseqs: list[list[int]],
     Args:
         tokens_subseqs (list[list[int]]): list containing list of tokens.
         padding_token_id (int): id associated to the padding token
-        max_length (int, optional): maximum number of tokens included within each subsequence. Defaults to 512.
-        padding_option (str, optional): 'right', 'left' or 'both'
+        max_length (int, optional): maximum number of tokens included within each subsequence.
+                                    Default to 512.
+        padding_option (str, optional): 'right', 'left' or 'both'.
+                                        Default to 'right'.
 
     Returns:
         list[list[int]]: list containing list of tokens.
     """
     for i, subseq in enumerate(tokens_subseqs):
-        
+
         # If padding needs to be added
         subseq_length = len(subseq)
-        
+
         if subseq_length < max_length:
-            
+
             # Check validity of padding option
             if padding_option not in ['right', 'left', 'both']:
                 return ValueError("padding_option must be either 'right', 'left' of 'both'")
-            
+
             elif padding_option == 'both':
-            
+
                 # Generate the padding
                 padding = [padding_token_id]*((max_length - subseq_length)//2)
-                
+
                 # If the current the length of the current subseq is even
                 if subseq_length % 2 == 0:
-                    
+
                     # Add equal amount of padding on left and right
                     tokens_subseqs[i] = padding + subseq + padding
-                    
+
                 else:
-                    
+
                     # Add more padding on the right than the left
                     tokens_subseqs[i] = padding + subseq + padding + [padding_token_id]
-                    
+
             else:
-                
+
                 # Generate the padding
                 padding = [padding_token_id]*(max_length - subseq_length)
-                
+
                 if padding_option == 'left':
-                    
+
                     # Add padding on left
                     tokens_subseqs[i] = padding + subseq
-                    
+
                 else:
-                    
+
                     # Add padding on right
                     tokens_subseqs[i] = subseq + padding
-                
+
     return tokens_subseqs
