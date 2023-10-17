@@ -33,7 +33,7 @@ class OCMDataset(Dataset):
                  seq_a: Tensor,
                  seq_b: Tensor,
                  labels: Tensor,
-                 species: Tensor,
+                 species: Tensor = None,
                  regression: bool = False,
                  include_flip: bool = False,
                  include_reverse_complement: bool = False,
@@ -57,7 +57,8 @@ class OCMDataset(Dataset):
                             tokenized gene sequences (N, NB CHUNKS, 512).
             labels (Tensor): binary labels indicating expression difference between
                              pairs of gene sequences.
-            species (Tensor): ids associated to the specie pair of each observation.
+            species (Tensor, optional): ids associated to the pair of species of each observation.
+                                        Default to None.
             regression (bool, optional): if True, indicates that labels are associated to a 
                                          regression task. Otherwise the object assumes that
                                          labels are associated to a binary classification task. 
@@ -82,6 +83,9 @@ class OCMDataset(Dataset):
             self.__get_reverse_complement: Callable = self.get_token_reverse_complement
         else:
             self.__get_reverse_complement: Callable = self.get_one_hot_reverse_complement
+
+        # Create a species tensor with zeros if none are provided
+        species = species if species is not None else zeros(seq_a.shape[0])
 
         # Save the data
         if include_reverse_complement:
