@@ -60,7 +60,7 @@ Package: Conda
 Language: Python
 Compute Platform: your_cuda_version
 ```
-Copy the provided command, paste it in the terminal and press enter. It might take few minutes for the installation, don't worry!
+Copy the provided command, paste it in the terminal and press enter.
 
 ## Training PlanTT from scratch
 It is possible to train a PlanTT model with your own data using the following script:
@@ -121,7 +121,7 @@ Below, we list the possible arguments that can be given to the script and furthe
     - Seed value used for training reproducibility. Default to ```1```.
 
 ### Usage example
-Here are the commands that were used to get the trained ```PlanTT-CNN``` version stored in the ```models``` folder.
+Here are the commands that were used to train the ```PlanTT-CNN``` model stored under the ```models``` folder.
 ```
 python train_plantt.py \
 --tower cnn \
@@ -139,15 +139,12 @@ python train_plantt.py \
 
 
 ## Single-base gene editing
-PlanTT can be used to generate a list of single-base modifications that can be applied to a gene to increase its transcript abundance.  
-The file ```edit_sequence.py``` offers a program that uses a trained version of ```PlanTT-CNN``` to generate such list for any gene.  
-The latter procedure requires the user to provide the promoter and terminator sequence of the gene of interest (see figure below).  
+PlanTT can be used to generate a list of single-base modifications that can be applied to a gene to increase its transcript abundance. The file ```edit_sequence.py``` offers a program that uses a trained version of ```PlanTT-CNN``` to generate such list for any gene. The latter procedure requires the user to provide the promoter and terminator sequence of the gene of interest (see figure below).  
 
 ![features](https://github.com/AmiiThinks/PlanTT/assets/122919943/702f0a1a-706a-4a3f-863b-43507bc5df8d)
 
 
-To run the program, simply enter the command ```python edit_sequence.py``` and fill the requested information in the terminal.  
-An example of output is shown below for an experiment with a budget of ```4``` single-base edits and randomly generated terminator and promoter sequences.
+To run the program, simply enter the command ```python edit_sequence.py``` and fill the requested information in the terminal. An example of output is shown below for an experiment with a budget of ```4``` single-base edits and randomly generated terminator and promoter sequences.
 
 Here is the terminal output:  
 
