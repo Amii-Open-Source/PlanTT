@@ -6,11 +6,11 @@ Description: This file stores the procedure to train plantt.
 
 from argparse import ArgumentParser
 from datetime import datetime
-from json import dump
+from json import dump, load
 from numpy import array
 from os import makedirs
 from os.path import join
-from pickle import load
+from pickle import load as pkload
 from time import time
 from torch import device
 from torch.backends import cudnn
@@ -157,9 +157,9 @@ if __name__ == '__main__':
 
     # Load the data
     with open(SETTINGS['training_data'], 'rb') as file:
-        x_train_a, x_train_b, y_train = load(file)
-    with open(SETTINGS['validation_data'], 'rb') as file:
-        x_valid_a, x_valid_b, y_valid = load(file)
+        x_train_a, x_train_b, y_train = pkload(file)
+    with open(SETTINGS['valid_data'], 'rb') as file:
+        x_valid_a, x_valid_b, y_valid = pkload(file)
 
     # Create the datasets
     train_set = OCMDataset(seq_a=x_train_a,
@@ -204,7 +204,7 @@ if __name__ == '__main__':
                                       device=DEVICE,
                                       datasets=(train_set, valid_set),
                                       batch_sizes=(SETTINGS['train_batch_size'],
-                                                   SETTINGS['test_batch_size']),
+                                                   SETTINGS['valid_batch_size']),
                                       metrics=metrics,
                                       lr=SETTINGS['lr'],
                                       max_epochs=SETTINGS['max_epochs'],
@@ -222,7 +222,7 @@ if __name__ == '__main__':
     # Recover the final training and validation metrics obtained
     JSON_PATH = join(EXPERIMENT_FOLDER, f"plantt_{SETTINGS['tower']}.json")
     with open(JSON_PATH, 'rb') as file:
-        data =  load(file)
+        data = load(file)
         train_records, valid_records = data['train'], data['valid']
 
     # Find the best epoch according to the argmin (or argmax) of the early stopping metric
