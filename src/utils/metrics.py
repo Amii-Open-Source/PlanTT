@@ -20,20 +20,34 @@ class Metric(ABC):
         
         Args:
             name (str): name of the metric.
-            to_maximize (bool): if True, indicates that the metric must be maximized. Otherwise, it must be minimized.
+            to_maximize (bool): if True, indicates that the metric must be maximized.
+                                Otherwise, it must be minimized.
         """
         super().__init__()
         self.__name: str = name
         self.__to_maximize: bool = to_maximize
-        
+
     @property
     def name(self) -> str:
+        """
+        Returns the name of the metric.
+
+        Returns:
+            str: name of the metric.
+        """
         return self.__name
-    
+
     @property
     def to_maximize(self) -> bool:
+        """
+        Returns a bool indicating if the metric must be maximized.
+        False indicates that the metric must be minimized.
+
+        Returns:
+            bool: bool indicating if the metric must be maximized.
+        """
         return self.__to_maximize
-    
+
     @staticmethod
     @abstractmethod
     def __call__(predicted_values: array,
@@ -49,7 +63,7 @@ class Metric(ABC):
             float: metric score
         """
         raise NotImplementedError
-    
+
 
 class BinaryClassificationMetric(Metric):
     """
@@ -64,16 +78,27 @@ class BinaryClassificationMetric(Metric):
         
         Args:
             name (str): name of the metric.
-            to_maximize (bool): if True, indicates that the metric must be maximized. Otherwise, it must be minimized.
-            from_proba (bool): if True, the metric is calculated using probabilities predicted (not the binary classes).
+            to_maximize (bool): if True, indicates that the metric must be maximized.
+                                Otherwise, it must be minimized.
+            from_proba (bool): if True, the metric is calculated using probabilities predicted
+                               and not the binary classes.
         """
         super().__init__(name, to_maximize)
-        
+
         # Set the private attribute
         self.__from_proba: bool = from_proba
-        
+
     @property
     def from_proba(self) -> bool:
+        """
+        Returns a bool indicating if the metric the metric is calculated using 
+        probabilities predicted and not the binary classes.
+        
+
+        Returns:
+            bool: bool indicating if the metric the metric is calculated using 
+                  probabilities predicted and not the binary classes.
+        """
         return self.__from_proba
 
 
@@ -86,24 +111,24 @@ class Accuracy(BinaryClassificationMetric):
         Sets internal attributes using the parent constructor.
         """
         super().__init__(name='Accuracy', to_maximize=True, from_proba=False)
-    
+
     @staticmethod
     def __call__(predicted_values: array,
                  targets: array) -> float:
         """
-        Calculates the ratio of correctly predicted observations.
+        Calculates the ratio of the correctly predicted observations.
         (TP + TN)/(TP + FP + TN + FN)
         
         Args:
-            predicted_values (array): predicted binary classes.
-            targets (array): ground truth (binary classes).
+            predicted_values (array): predicted binary classes (N,).
+            targets (array): ground truth (binary classes) (N,).
 
         Returns:
             float: accuracy score.
         """
         return mean(predicted_values == targets)
-    
-    
+
+
 class AreaUnderROC(BinaryClassificationMetric):
     """
     Wrapper for the Area Under ROC curve metric provided by scikit learn.
@@ -115,16 +140,16 @@ class AreaUnderROC(BinaryClassificationMetric):
         Sets internal attributes using the parent constructor.
         """
         super().__init__(name='auROC', to_maximize=True, from_proba=True)
-        
+
     @staticmethod
     def __call__(predicted_values: array,
                  targets: array) -> float:
         """
-        Calculates the area under ROC curve.
+        Calculates the area under the ROC curve.
         
         Args:
-            predicted_values (array): predicted probabilities of belonging to class 1.
-            targets (array): ground truth (binary classes).
+            predicted_values (array): predicted probabilities of belonging to class 1 (N,).
+            targets (array): ground truth (binary classes) (N,).
 
         Returns:
             float: area under ROC curve.
@@ -136,14 +161,15 @@ class BalancedAccuracy(BinaryClassificationMetric):
     """
     Wrapper for the balanced accuracy metric provided by scikit learn.
     
-    See : https://scikit-learn.org/stable/modules/generated/sklearn.metrics.balanced_accuracy_score.html
+    See:
+    https://scikit-learn.org/stable/modules/generated/sklearn.metrics.balanced_accuracy_score.html
     """
     def __init__(self) -> None:
         """
         Sets internal attributes using the parent constructor.
         """
         super().__init__(name='BAccuracy', to_maximize=True, from_proba=False)
-        
+
     @staticmethod
     def __call__(predicted_values: array,
                  targets: array) -> float:
@@ -152,27 +178,27 @@ class BalancedAccuracy(BinaryClassificationMetric):
         (TP/(TP + FN) + TN/(TN + FP))/2 
         
         Args:
-            predicted_values (array): predicted binary classes.
-            targets (array): ground truth (binary classes).
+            predicted_values (array): predicted binary classes (N,).
+            targets (array): ground truth (binary classes) (N,).
 
         Returns:
             float: balanced accuracy
         """
         return skm.balanced_accuracy_score(targets, predicted_values)
-            
-        
+
+
 class F1Score(BinaryClassificationMetric):
     """
     Wrapper for the F1-score metric provided by scikit learn.
     
-    See : https://scikit-learn.org/stable/modules/generated/sklearn.metrics.f1_score.html
+    See: https://scikit-learn.org/stable/modules/generated/sklearn.metrics.f1_score.html
     """
     def __init__(self) -> None:
         """
         Sets internal attributes using the parent constructor.
         """
         super().__init__(name='F1-score', to_maximize=True, from_proba=False)
-        
+
     @staticmethod
     def __call__(predicted_values: array,
                  targets: array) -> float:
@@ -181,15 +207,14 @@ class F1Score(BinaryClassificationMetric):
         2 * (precision * recall) / (precision + recall)
         
         Args:
-            predicted_values (array): predicted binary classes.
-            targets (array): ground truth (binary classes).
+            predicted_values (array): predicted binary classes (N,).
+            targets (array): ground truth (binary classes) (N,).
 
         Returns:
             float: F1-score
         """
         return skm.f1_score(targets, predicted_values)
-        
-    
+
 class Precision(BinaryClassificationMetric):
     """
     Wrapper for the precision metric provided by scikit learn.
@@ -201,7 +226,7 @@ class Precision(BinaryClassificationMetric):
         Sets internal attributes using the parent constructor.
         """
         super().__init__(name='Precision', to_maximize=True, from_proba=False)
-    
+
     @staticmethod
     def __call__(predicted_values: array,
                  targets: array) -> float:
@@ -210,15 +235,15 @@ class Precision(BinaryClassificationMetric):
         TP / (TP + FP)
         
         Args:
-            predicted_values (array): predicted binary classes.
-            targets (array): ground truth (binary classes).
+            predicted_values (array): predicted binary classes (N,).
+            targets (array): ground truth (binary classes) (N,).
 
         Returns:
             float: precision.
         """
         return skm.precision_score(targets, predicted_values)
-    
-    
+
+
 class Recall(BinaryClassificationMetric):
     """
     Wrapper for the recall metric provided by scikit learn.
@@ -230,17 +255,17 @@ class Recall(BinaryClassificationMetric):
         Sets internal attributes using the parent constructor.
         """
         super().__init__(name='Recall', to_maximize=True, from_proba=False)
-    
+
     @staticmethod
     def __call__(predicted_values: array,
                  targets: array) -> float:
         """
-        Calculates the precision, which is:
+        Calculates the recall, which is:
         TP / (TP + FN)
         
         Args:
-            predicted_values (array): predicted binary classes.
-            targets (array): ground truth (binary classes).
+            predicted_values (array): predicted binary classes (N,).
+            targets (array): ground truth (binary classes) (N,).
 
         Returns:
             float: precision.
@@ -259,7 +284,7 @@ class MeanSquaredError(Metric):
         Sets internal attributes using the parent constructor.
         """
         super().__init__(name='MSE', to_maximize=False)
-        
+
     @staticmethod
     def __call__(predicted_values: array,
                  targets: array) -> float:
@@ -267,14 +292,14 @@ class MeanSquaredError(Metric):
         Calculates the mean squared error.
         
         Args:
-            predicted_values (array): real-valued regression predictions.
-            targets (array): ground truth (regression targets).
+            predicted_values (array): real-valued regression predictions (N,).
+            targets (array): ground truth (regression targets) (N,).
 
         Returns:
             float: mean squared error.
         """
         return skm.mean_squared_error(targets, predicted_values)
-    
+
 
 class RootMeanSquaredError(Metric):
     """
@@ -287,7 +312,7 @@ class RootMeanSquaredError(Metric):
         Sets internal attributes using the parent constructor.
         """
         super().__init__(name='RMSE', to_maximize=False)
-        
+
     @staticmethod
     def __call__(predicted_values: array,
                  targets: array) -> float:
@@ -295,15 +320,14 @@ class RootMeanSquaredError(Metric):
         Calculates the root mean squared error.
         
         Args:
-            predicted_values (array): real-valued regression predictions.
-            targets (array): ground truth (regression targets).
+            predicted_values (array): real-valued regression predictions (N,).
+            targets (array): ground truth (regression targets) (N,).
 
         Returns:
             float: root mean squared error.
         """
         return skm.mean_squared_error(targets, predicted_values, squared=False)
-    
-    
+ 
 class MeanAbsoluteError(Metric):
     """
     Mean absolute error metric.
@@ -313,7 +337,7 @@ class MeanAbsoluteError(Metric):
         Sets internal attributes using the parent constructor.
         """
         super().__init__(name='MAE', to_maximize=False)
-    
+
     @staticmethod
     def __call__(predicted_values: array,
                  targets: array) -> float:
@@ -321,26 +345,27 @@ class MeanAbsoluteError(Metric):
         Calculates the mean absolute error.
         
         Args:
-            predicted_values (array): real-valued regression predictions.
-            targets (array): ground truth (regression targets).
+            predicted_values (array): real-valued regression predictions (N,).
+            targets (array): ground truth (regression targets) (N,).
 
         Returns:
             float: mean absolute error.
         """
         return mean(abs(targets - predicted_values))
-    
+
 class MeanAbsolutePercentageError(Metric):
     """
     Wrapper for the mean absolute percentage error metric provided by scikit learn.
     
-    See: https://scikit-learn.org/stable/modules/generated/sklearn.metrics.mean_absolute_percentage_error.html
+    See: 
+    https://scikit-learn.org/stable/modules/generated/sklearn.metrics.mean_absolute_percentage_error.html
     """
     def __init__(self) -> None:
         """
         Sets internal attributes using the parent constructor.
         """
         super().__init__(name='MAPE', to_maximize=False)
-        
+
     @staticmethod
     def __call__(predicted_values: array,
                  targets: array) -> float:
@@ -348,14 +373,14 @@ class MeanAbsolutePercentageError(Metric):
         Calculates the mean absolute error.
         
         Args:
-            predicted_values (array): real-valued regression predictions.
-            targets (array): ground truth (regression targets).
+            predicted_values (array): real-valued regression predictions (N,).
+            targets (array): ground truth (regression targets) (N,).
 
         Returns:
             float: mean absolute error.
         """
         return skm.mean_absolute_percentage_error(targets, predicted_values)
-    
+
 class SpearmanRankCorrelation(Metric):
     """
     Wrapper for the spearman rank correlation metric provided by scipy.
@@ -367,7 +392,7 @@ class SpearmanRankCorrelation(Metric):
         Sets internal attributes using the parent constructor.
         """
         super().__init__(name='SpearmanR', to_maximize=True)
-        
+
     @staticmethod
     def __call__(predicted_values: array,
                  targets: array) -> float:
@@ -375,14 +400,14 @@ class SpearmanRankCorrelation(Metric):
         Calculates the spearman rank correlation.
         
         Args:
-            predicted_values (array): real-valued regression predictions.
-            targets (array): ground truth (regression targets).
+            predicted_values (array): real-valued regression predictions (N,).
+            targets (array): ground truth (regression targets) (N,).
 
         Returns:
             float: spearman rank correlation.
         """
         return spearmanr(targets, predicted_values).correlation
-    
+
 class RSquared(Metric):
     """
     Wrapper for the coefficient of determination metric provided by scikit-learn.
@@ -394,7 +419,7 @@ class RSquared(Metric):
         Sets internal attributes using the parent constructor.
         """
         super().__init__(name='RSquared', to_maximize=True)
-        
+
     @staticmethod
     def __call__(predicted_values: array,
                  targets: array) -> float:
@@ -402,15 +427,14 @@ class RSquared(Metric):
         Calculates the spearman rank correlation.
         
         Args:
-            predicted_values (array): real-valued regression predictions.
-            targets (array): ground truth (regression targets).
+            predicted_values (array): real-valued regression predictions (N,).
+            targets (array): ground truth (regression targets) (N,).
 
         Returns:
             float: spearman rank correlation.
         """
         return skm.r2_score(targets, predicted_values)
-    
-    
+
 class AccuracyRMSERatio(Metric):
     """
     Divides the Balanced Accuracy by the Root Mean Squared Error.
@@ -420,7 +444,7 @@ class AccuracyRMSERatio(Metric):
         Sets internal attributes using the parent constructor.
         """
         super().__init__(name='BAcc-RMSE', to_maximize=True)
-        
+
     @staticmethod
     def __call__(predicted_values: array,
                  targets: array) -> float:
@@ -428,14 +452,14 @@ class AccuracyRMSERatio(Metric):
         Calculates the balanced accuracy-rmse ratio
         
         Args:
-            predicted_values (array): real-valued regression predictions.
-            targets (array): ground truth (regression targets).
+            predicted_values (array): real-valued regression predictions (N,).
+            targets (array): ground truth (regression targets) (N,).
 
         Returns:
             float: spearman rank correlation.
         """
         b_acc = skm.balanced_accuracy_score((targets > 0), (predicted_values > 0))
         rmse = skm.mean_squared_error(targets, predicted_values, squared=False)
-        
+
         return (b_acc/rmse)*100
     

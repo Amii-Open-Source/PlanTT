@@ -2,7 +2,7 @@
 Authors: Nicolas Raymond
          Fatima Davelouis
          
-Description: Stores function that enable the reproducibility of the experiments.
+Description: Stores functions that enable the reproducibility of the experiments.
 """
 from random import seed
 from numpy.random import seed as np_seed
@@ -14,7 +14,8 @@ from torch.cuda import manual_seed_all
 SEED: int = 1
 
 
-def set_seed(seed_value: int, n_gpu: int) -> None:
+def set_seed(seed_value: int,
+             n_gpu: int) -> None:
     """
     Sets the seed value associated to the main libraries.
     
