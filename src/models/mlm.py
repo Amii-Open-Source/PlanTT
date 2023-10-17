@@ -15,7 +15,7 @@ from src.models.blocks import CNNBlock1D
 from src.models.plantt import Tower
 
 
-class dDNABERT(Tower):
+class DDNABERT(Tower):
     """
     Distilled DNABERT6 model with an additional adapter layer to connect to PlanTT.
     """
