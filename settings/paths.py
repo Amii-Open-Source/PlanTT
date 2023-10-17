@@ -1,7 +1,8 @@
 """
 Authors: Nicolas Raymond
 
-Description: Stores constant indicating the paths leading to important directories within the project
+Description: Stores constant indicating the paths leading to 
+             important directories within the project
              or pre-trained models on HuggingFace.
 """
 
@@ -19,5 +20,3 @@ REVERSE_COMPLEMENT_MAP: str = join(SRC, 'data', 'modules', 'reverse_complement_m
 # HuggingFace paths
 DDNABERT_HF: str = 'Peltarion/dnabert-minilm-small'
 DNABERT_HF: str = 'zhihan1996/DNA_bert'
-
-
