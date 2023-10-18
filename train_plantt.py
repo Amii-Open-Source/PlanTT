@@ -13,7 +13,7 @@ from pickle import load as pkload
 from time import time
 from torch import device
 from torch.backends import cudnn
-from torch.cuda import is_available, set_per_process_memory_fraction
+from torch.cuda import is_available, set_per_process_memory_fraction, device_count
 
 # Project imports
 from settings.paths import RECORDS
@@ -77,7 +77,7 @@ def get_settings():
 
     # Milestones
     parser.add_argument('-ms', '--milestones', nargs='*', type=int, default=None,
-                        help='Epochs at which the learning rate is multiplied by \
+                        help='Epochs after which the learning rate is multiplied by \
                               a factor of gamma (ex. 50 60 70). When set to None, \
                               the learning rate is multiplied by a factor of gamma \
                               every 15 epochs, starting from epoch 75th. \
@@ -127,15 +127,19 @@ if __name__ == '__main__':
     # Retrieve environment settings
     SETTINGS: dict = vars(get_settings())
 
-    # Look for GPU availability
+    # Check for GPU availability
     if is_available():
         if SETTINGS['device_id'] is not None:
             DEVICE = device(f"cuda:{SETTINGS['device_id']}")
         else:
-            DEVICE = device('cuda')
+            DEVICE = device('cuda:0')
     else:
         raise ValueError('Since models are trained with autocast and float16, \
                           a GPU is required for the experiment.')
+
+    # Set GPU memory allocation
+    if 0 < SETTINGS['memory_frac'] < 1:
+        set_per_process_memory_fraction(fraction=SETTINGS['memory_frac'], device=DEVICE)
 
     # Create PlanTT tower
     if SETTINGS['tokens']:
@@ -179,10 +183,6 @@ if __name__ == '__main__':
     # Save the settings of the experiment
     with open(join(EXPERIMENT_FOLDER, 'settings.json'), 'w', encoding="utf-8") as file:
         dump(SETTINGS, file, indent=True)
-
-    # Set GPU memory allocation
-    if 0 < SETTINGS['memory_frac'] < 1:
-        set_per_process_memory_fraction(fraction=SETTINGS['memory_frac'], device=DEVICE)
 
     # Set the seed for reproducibility
     cudnn.deterministic = True
