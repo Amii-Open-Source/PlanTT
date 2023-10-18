@@ -41,6 +41,9 @@ def save_progress_figure(train_scores: array,
         ax.set_xlabel('Epochs')
         ax.set_ylabel(metric_name)
 
+    ax1.set_title('Training')
+    ax2.set_title('Validation')
+
     # Hide the labels for the right panel
     for ax in (ax1, ax2):
         ax.label_outer()
