@@ -251,7 +251,7 @@ class Trainer(ABC):
                               losses and metric scores.
         """
         # Build dict
-        postfix_dict = {f'{metric} ({phase})': f'{self._progress[phase][metric][-1]:.6f}'
+        postfix_dict = {f'{metric} ({phase})': f'{self._progress[phase][metric][-1]:.2f}'
                         for phase in ['train', 'valid'] for metric in
                         [self._loss_fct_name, self._valid_metric]}
 
