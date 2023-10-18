@@ -2,7 +2,7 @@
 
 This code repository is associated to the paper entitled *"PlanTT: a two-tower contrastive approach for the prediction of gene expression difference in plants"*, which was submitted to RECOMB 24.
 
-<img width="762" alt="PlanTT drawio" src="https://github.com/AmiiThinks/PlanTT/assets/122919943/8cde1d26-4b48-4f9c-9724-0ccb8b07b845">
+<img width="802" alt="PlanTT drawio" src="https://github.com/AmiiThinks/PlanTT/assets/122919943/5e30bfe2-873b-4ec8-9355-9f34486a2dd4">
 
 
 ## Project Tree :deciduous_tree:
@@ -25,7 +25,7 @@ This section gives an overview of the project organization.
 Note that each Python file in the GitHub repository is accompanied with a description of its purpose. 
 
 ## Environment Setup :wrench:
-The following section contains the procedure to correctly setup the environment needed for the project.  
+The following section contains the procedure to setup the environment required for the project.  
 The procedure was tested on a machine with ***Ubuntu 22.04.2 LTS operating system*** and ***Conda 23.3.1 software***.
 
 #### 1. Clone the master branch of the GitHub repository :pencil:
@@ -72,7 +72,7 @@ Pickle files containing respectively the training set and the validation set are
 with open(path, 'rb') as file:
         x_a, x_b, y = load(file)
 ```
-where ```x_a``` and ```x_b``` are DNA sequences that are either one-hot encoded ```(N, 5, 3000)``` or separated into 6 chunks of tokenized 6-mers ```(N, 6, 3000)```, and ```y``` is a tensor of shape ```(N,)``` with rank expression differences of mRNA abundance differences. One-hot encoded sequences must respect the following convention:
+where ```x_a``` and ```x_b``` are DNA sequences that are either one-hot encoded ```(N, 5, 3000)``` or separated into 6 chunks of tokenized 6-mers ```(N, 6, 512)```, and ```y``` is a tensor of shape ```(N,)``` with rank expression differences of mRNA abundance differences. One-hot encoded sequences must respect the following convention:
 ```
 "A": [1, 0, 0, 0, 0]
 "C": [0, 1, 0, 0, 0]
@@ -81,7 +81,7 @@ where ```x_a``` and ```x_b``` are DNA sequences that are either one-hot encoded 
 "N": [0, 0, 0, 0, 1]
 "X": [0, 0, 0, 0, 1]
 ```
-All files recorded during the script are saved under the ```records``` directory in a folder named after the training start time.
+All files recorded during the script execution are saved under the ```records``` directory in a folder named after the training start time.
 Below, we list the possible arguments that can be given to the script and further provide a usage example.
 
 ### Argument
@@ -104,7 +104,7 @@ Below, we list the possible arguments that can be given to the script and furthe
 - ```--patience (int)```:
     - Number of epochs without improvement allowed before stopping the training. Only the weights associated to the best validation RMSE are kept following the training. Default to ```20```.
 - ```--milestones, -ms (list[int])```:
-    - Epochs at which the learning rate is multiplied by a factor of gamma (ex. ```50 60 70```). When set to None, the learning rate is multiplied by a factor of gamma every ```15``` epochs, starting from epoch ```75th```. Default to ```None```.
+    - Epochs at which the learning rate is multiplied by a factor of ```gamma``` (ex. ```50 60 70```). When set to None, the learning rate is multiplied by a factor of ```gamma``` every ```15``` epochs, starting from epoch ```75th```. Default to ```None```.
 - ```--gamma (float)```:
     - Constant multiplying the learning rate at each milestone. Default to ```0.75```.
 - ```--weight_decay, -wd (float)```:
