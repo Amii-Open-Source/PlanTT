@@ -41,7 +41,6 @@ class Trainer(ABC):
         Args:
             loss_fct (str): name of the loss function.
         """
-        self._epoch: int = 0
         self._in_training: bool = False
         self._loss_fct_name: str = loss_fct_name
         self._optimizer: Optimizer = None
@@ -55,7 +54,7 @@ class Trainer(ABC):
     @abstractmethod
     def _update_weights(self,
                         model: Module,
-                        device: device,
+                        dev: device,
                         dataloader: DataLoader,
                         metrics: list[Metric],
                         scaler: Scaler = None) -> Module:
@@ -64,7 +63,7 @@ class Trainer(ABC):
         
         Args:
             model (Module): neural network.
-            device (device): device on which to send the model and its inputs.
+            dev (device): device on which to send the model and its inputs.
             dataloader (DataLoader): dataloader containing the training data.
             metrics (list[Metric]): list of metrics measured after the epoch.
             scaler (Scaler): object used to scale target values.
@@ -77,7 +76,7 @@ class Trainer(ABC):
     @abstractmethod
     def evaluate(self,
                  model: Module,
-                 device: device,
+                 dev: device,
                  dataloader: DataLoader,
                  metrics: list[Metric],
                  scaler: Scaler = None) -> None:
@@ -86,7 +85,7 @@ class Trainer(ABC):
 
         Args:
             model (Module): neural network.
-            device (device): device on which to send the model and its inputs.
+            dev (device): device on which to send the model and its inputs.
             dataloader (DataLoader): dataloader containing test or validation data.
             metrics (list[Metric]): list of metrics measured after the epoch.
             scaler (Scaler): object used to scale target values.
@@ -97,7 +96,7 @@ class Trainer(ABC):
 
     def train(self,
               model: Module,
-              device: device,
+              dev: device,
               datasets: tuple[Dataset, Dataset],
               batch_sizes: tuple[int, int],
               metrics: list[Metric],
@@ -108,13 +107,13 @@ class Trainer(ABC):
               record_path: str = None,
               scheduler_milestones: list[int] = None,
               scheduler_gamma: int = 0.75,
-              return_epoch: bool = False) -> Module | tuple[Module, int]:
+              return_epochs: bool = False) -> Module | tuple[Module, int]:
         """
         Optimizes the weight of a neural network.
         
         Args:
             model (Module): neural network.
-            device (device): device on which to send the model and its inputs.
+            dev (device): device on which to send the model and its inputs.
             datasets (tuple[Dataset, Dataset]): tuple of datasets. The first will be used
                                                 for training and the second for validation.
             batch_sizes (tuple[int, int]): tuple of batch sizes. The first will be used for
@@ -140,11 +139,12 @@ class Trainer(ABC):
                                                         [75, 100, 125, 150].
             scheduler_gamma (int, optional): value multiply the learning rate at each milestone.
                                              Default to 0.5
-            return_epoch (bool, optional): if True, the number associated to the last training
-                                           epoch will be returned. Default to False.
+            return_epochs (bool, optional): if True, the number associated to the last training
+                                            epoch and the best training epoch will be returned. 
+                                            Default to False.
 
         Returns:
-            Module: optimized model.
+            Module: optimized model or (optimized model, last epoch, best epoch)
         """
         # Change the status of the trainer
         self._in_training = True
@@ -178,7 +178,7 @@ class Trainer(ABC):
             for metric in metrics:
                 self._progress[phase][metric.name] = []
 
-        # Set the name of the metric used for the early stopping and initialize the EarlyStopper 
+        # Set the name of the metric used for the early stopping and initialize the EarlyStopper
         if len(metrics) != 0:
             self._valid_metric = metrics[-1].name
             early_stopper = EarlyStopper(patience, metrics[-1].to_maximize, record_path)
@@ -190,17 +190,14 @@ class Trainer(ABC):
         with tqdm(total=max_epochs, desc='Training') as pbar:
             for i in range(max_epochs):
 
-                # Set the epoch attribute
-                self._epoch = i
-
                 # Update the weights
-                self._update_weights(model, device, train_dataloader, metrics, scaler)
+                self._update_weights(model, dev, train_dataloader, metrics, scaler)
 
                 # Process to the evaluation on the validation set
-                self.evaluate(model, device, valid_dataloader, metrics, scaler)
+                self.evaluate(model, dev, valid_dataloader, metrics, scaler)
 
                 # Look for early stopping
-                early_stopper(self._get_last_valid_score(), model)
+                early_stopper(i, self._get_last_valid_score(), model)
 
                 # Update progress bar
                 pbar.update(1)
@@ -231,8 +228,8 @@ class Trainer(ABC):
         # Change the status of the trainer
         self._in_training = False
 
-        if return_epoch:
-            return model, self._epoch
+        if return_epochs:
+            return model, i, early_stopper.best_epoch
 
         return model
 
@@ -279,7 +276,7 @@ class OCMTrainer(Trainer):
 
     def _update_weights(self,
                         model: Module,
-                        device: device,
+                        dev: device,
                         dataloader: DataLoader,
                         metrics: list[Metric],
                         scaler: Scaler = None) -> Module:
@@ -288,7 +285,7 @@ class OCMTrainer(Trainer):
         
         Args:
             model (Module): contrast model.
-            device (device): device on which to send the model and its inputs.
+            dev (device): device on which to send the model and its inputs.
             dataloader (DataLoader): dataloader containing the training data.
             metrics (list[Metric]): list of metrics measured after the epoch.
             scaler (Scaler): object used to scale target values.
@@ -298,7 +295,7 @@ class OCMTrainer(Trainer):
         """
         # Set the model in training mode and send it to the device
         model.train()
-        model.to(device)
+        model.to(dev)
 
         # Initialize variables to keep track of the progress of the loss,
         # the predictions, and the targets for one epoch
@@ -311,13 +308,13 @@ class OCMTrainer(Trainer):
         for seq_a, seq_b, targets, _ in dataloader:
 
             # Transfer data on the device
-            seq_a, seq_b, targets = seq_a.to(device), seq_b.to(device), targets.to(device)
+            seq_a, seq_b, targets = seq_a.to(dev), seq_b.to(dev), targets.to(dev)
 
             # Clear of the gradient
             self._optimizer.zero_grad()
 
             # Execute the forward pass and compute the loss
-            with autocast(device_type=device.type, dtype=float16):
+            with autocast(device_type=dev.type, dtype=float16):
                 predictions = model(seq_a, seq_b)
                 loss = self.__loss_function(predictions, targets)
 
@@ -348,7 +345,7 @@ class OCMTrainer(Trainer):
 
     def evaluate(self,
                  model: Module,
-                 device: device,
+                 dev: device,
                  dataloader: DataLoader,
                  metrics: list[Metric],
                  scaler: Scaler = None) -> None | tuple[Tensor, Tensor, Tensor]:
@@ -358,7 +355,7 @@ class OCMTrainer(Trainer):
 
         Args:
             model (Module): contrast model.
-            device (device): device on which to send the model and its inputs.
+            dev (device): device on which to send the model and its inputs.
             dataloader (DataLoader): dataloader containing the test or validation data.
             metrics (list[Metric]): list of metrics measured after the epoch.
             scaler (Scaler): object used to scale target values.
@@ -369,7 +366,7 @@ class OCMTrainer(Trainer):
         """
         # Set the model in eval mode and send it to device
         model.eval()
-        model.to(device)
+        model.to(dev)
 
         # Initialize variables to keep track of the progress of the loss,
         # the predictions and the targets during the evaluation
@@ -381,10 +378,10 @@ class OCMTrainer(Trainer):
             for seq_a, seq_b, targets, species in dataloader:
 
                 # Transfer data on the device
-                seq_a, seq_b, targets = seq_a.to(device), seq_b.to(device), targets.to(device)
+                seq_a, seq_b, targets = seq_a.to(dev), seq_b.to(dev), targets.to(dev)
 
                 # Execute the forward pass and compute the loss
-                with autocast(device_type=device.type, dtype=float16):
+                with autocast(device_type=dev.type, dtype=float16):
                     predictions = model(seq_a, seq_b)
                     loss = self.__loss_function(predictions, targets)
 
@@ -482,8 +479,9 @@ class EarlyStopper:
                                        Default to None.
         """
         # Set private attributes
-        self.__patience: int = patience
+        self.__best_epoch: int = 0
         self.__counter: int = 0
+        self.__patience: int = patience
         self.__path_provided: bool = file_path is not None
         self.__stop: bool = False
 
@@ -500,6 +498,16 @@ class EarlyStopper:
         else:
             self.__best_score: float = np_inf
             self.__is_better: Callable[[float, float], bool] = lambda x, y: x < y
+
+    @property
+    def best_epoch(self) -> int:
+        """
+        Returns the number of the epoch associated to the best score.
+
+        Returns:
+            int: epoch associated to the best score.
+        """
+        return self.__best_epoch
 
     @property
     def path_provided(self) -> bool:
@@ -524,6 +532,7 @@ class EarlyStopper:
         return self.__stop
 
     def __call__(self,
+                 epoch: int,
                  score: float,
                  model: Module) -> None:
         """
@@ -531,6 +540,7 @@ class EarlyStopper:
         and updates the object's attributes.
         
         Args:
+            epoch (int): current epoch.
             score (float): new validation score.
             model (Module): current model for which we've seen the score.
         """
@@ -545,6 +555,7 @@ class EarlyStopper:
         # Save the parameters of the model if the score is better
         # than the best score observed before
         else:
+            self.__best_epoch = epoch
             self.__best_score = score
             save(model.state_dict(), self.__file_path)
             self.__counter = 0
