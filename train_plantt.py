@@ -7,7 +7,6 @@ Description: This file stores the procedure to train plantt.
 from argparse import ArgumentParser
 from datetime import datetime
 from json import dump, load
-from numpy import array
 from os import makedirs
 from os.path import join
 from pickle import load as pkload
@@ -200,8 +199,8 @@ if __name__ == '__main__':
 
     # Train the model
     start = time()
-    model, last_epoch = trainer.train(model=plantt,
-                                      device=DEVICE,
+    model, last, best = trainer.train(model=plantt,
+                                      dev=DEVICE,
                                       datasets=(train_set, valid_set),
                                       batch_sizes=(SETTINGS['train_batch_size'],
                                                    SETTINGS['valid_batch_size']),
@@ -214,10 +213,12 @@ if __name__ == '__main__':
                                                        f"plantt_{SETTINGS['tower']}"),
                                       scheduler_milestones=SETTINGS['milestones'],
                                       scheduler_gamma=SETTINGS['gamma'],
-                                      return_epoch=True)
+                                      return_epochs=True)
 
     # Save the training time and the number of epochs
-    results = {'training_time': round((time() - start)/60, 2), 'epochs': last_epoch}
+    results = {'training_time': round((time() - start)/60, 2),
+               'total_epochs': last,
+               'best_epoch': best}
 
     # Recover the final training and validation metrics obtained
     JSON_PATH = join(EXPERIMENT_FOLDER, f"plantt_{SETTINGS['tower']}.json")
@@ -225,17 +226,11 @@ if __name__ == '__main__':
         data = load(file)
         train_records, valid_records = data['train'], data['valid']
 
-    # Find the best epoch according to the argmin (or argmax) of the early stopping metric
-    if metrics[-1].to_maximize:
-        best_epoch = array(valid_records[metrics[-1].name]).argmax()
-    else:
-        best_epoch = array(valid_records[metrics[-1].name]).argmin()
-
     # Save the scores
-    results['train_metrics'] = {met.name: round(train_records[met.name][best_epoch], 4)
+    results['train_metrics'] = {met.name: round(train_records[met.name][best], 4)
                                 for met in metrics}
 
-    results['valid_metrics'] = {met.name: round(valid_records[met.name][best_epoch], 4)
+    results['valid_metrics'] = {met.name: round(valid_records[met.name][best], 4)
                                 for met in metrics}
 
     # Save a summary of the training
