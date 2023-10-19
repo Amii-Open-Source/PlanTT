@@ -13,6 +13,7 @@ from os.path import dirname, join
 CURRENT_PROJECT: str = dirname(dirname(__file__))
 CHECKPOINTS: str = join(CURRENT_PROJECT, 'checkpoints')
 SRC: str = join(CURRENT_PROJECT, 'src')
+DATA: str = join(CURRENT_PROJECT, 'data')
 TRAINED_MODELS: str = join(CURRENT_PROJECT, 'models')
 RECORDS: str = join(CURRENT_PROJECT, 'records')
 MODELS: str = join(SRC, 'models')
