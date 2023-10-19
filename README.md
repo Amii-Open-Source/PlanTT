@@ -148,11 +148,10 @@ To run the program, simply enter the command ```python edit_sequence.py``` and f
 
 Here is the terminal output:  
 
-<img width="527" alt="program_output" src="https://github.com/AmiiThinks/PlanTT/assets/122919943/cad65217-d4fd-427b-a466-595688d158f2">
+<img width="541" alt="program_output" src="https://github.com/AmiiThinks/PlanTT/assets/122919943/7b267016-5dec-48ce-ba03-102b44b119df">
 
 
-Here is the document ```edit_1.pdf``` mentioned in the last figure: 
-
-<img width="815" alt="program_edit_screenshot" src="https://github.com/AmiiThinks/PlanTT/assets/122919943/96f8d6e8-89c8-4781-a47b-e7a446699d11">
+Here is the document ```edit_2.pdf``` mentioned in the last figure: 
 
 
+<img width="846" alt="program_edit_2" src="https://github.com/AmiiThinks/PlanTT/assets/122919943/101e7a76-0d5e-4b90-8539-aa3dd1dbd5f9">
