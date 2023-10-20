@@ -72,7 +72,7 @@ def get_settings():
     parser.add_argument('-patience', '--patience', type=int, default=20,
                         help='Number of epochs without improvement allowed \
                               before stopping the training. Only the weights associated to \
-                              the best validation score are kept following the training. \
+                              the best validation score are kept at the end of the training. \
                               Default to 20.')
 
     # Milestones
@@ -168,12 +168,14 @@ if __name__ == '__main__':
     train_set = OCMDataset(seq_a=x_train_a,
                            seq_b=x_train_b,
                            labels=y_train,
-                           species=None)
+                           species=None,
+                           tokens=SETTINGS['tokens'])
 
     valid_set = OCMDataset(seq_a=x_valid_a,
                            seq_b=x_valid_b,
                            labels=y_valid,
-                           species=None)
+                           species=None,
+                           tokens=SETTINGS['tokens'])
 
     # Create folders to store the results
     EXPERIMENT_FOLDER: str = join(RECORDS, datetime.now().strftime('%d_%m_%Y_%H:%M:%S'))
