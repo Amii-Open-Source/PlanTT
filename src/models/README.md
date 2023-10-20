@@ -27,7 +27,7 @@ A summary of the architecture is presented in the following illustration.
 
 
 ## DNABERT-based tower (for PlanTT-DNABERT)
-Two different tower architectures integrating [DNABERT](https://pubmed.ncbi.nlm.nih.gov/33538820/), a masked language model (MLM) pre-trained on the human genome, are proposed in ```mlm.py```. Precisely, the two architectures are defined by ```DNABERT``` and ```dDNABERT``` classes.   
+Two different tower architectures integrating [DNABERT](https://pubmed.ncbi.nlm.nih.gov/33538820/), a masked language model (MLM) pre-trained on the human genome, are proposed in ```mlm.py```. Precisely, the two architectures are defined by ```DNABERT``` and ```DDNABERT``` classes.   
 Each of them follows the figure below, but distinguishes itself by the version of DNABERT it uses.
 
 ![dnabert_tower_2](https://github.com/AmiiThinks/PlanTT/assets/122919943/20adaa82-30aa-4738-8872-579fd80f1f94)
@@ -35,7 +35,7 @@ Each of them follows the figure below, but distinguishes itself by the version o
 
 - ```DNABERT``` integrates the [plain version](https://huggingface.co/zhihan1996/DNA_bert_6) of DNABERT6.
 
-- ```dDNABERT``` integrates a [distilled version](https://huggingface.co/Peltarion/dnabert-minilm-small) of DNABERT6. For this particular model, embeddings shown in the figure above have size 384 instead of 768.
+- ```DDNABERT``` integrates a [distilled version](https://huggingface.co/Peltarion/dnabert-minilm-small) of DNABERT6. For this particular model, embeddings shown in the figure above have size 384 instead of 768.
 
 
 
