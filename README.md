@@ -9,6 +9,7 @@ This code repository is associated to the paper entitled *"PlanTT: a two-tower c
 This section gives an overview of the project organization.
 ```
 ├── checkpoints                        -> Temporary model checkpoints during training.
+├── data                               -> Data samples provided to try train_plantt.py
 ├── records                            -> Record files generated from training a PlanTT model.
 ├── settings                           -> Conda environment settings and file with important directory paths.
 ├── src                                -> Code modules and functions required to run the experiments.
@@ -20,6 +21,7 @@ This section gives an overview of the project organization.
 │   └── utils                          -> Other utilities such as custom metrics and loss functions.
 ├── models                             -> Weights of trained PlanTT models.
 ├── train_plantt.py                    -> Script to train a PlanTT model from scratch.
+├── process_samples.py                 -> Script to process the raw data samples provided.
 └── edit_sequence.py                   -> Gene editing program (see details further below).
 ```
 Note that each Python file in the GitHub repository is accompanied with a description of its purpose. 
@@ -62,6 +64,13 @@ Compute Platform: your_cuda_version
 ```
 Copy the provided command, paste it in the terminal and press enter.
 
+
+#### 4. Process the raw data samples provided (optional) :dna:
+In the ```data``` folder of the repository, we provided raw data samples into ```csv``` files. The latter can be processed to further try ```train_plantt.py``` script, which purpose is detailed below. The training and test sets contain 2560 and 960 pairs of synthetic dna sequences respectively. Sequences were generated randomly and their associated targets were sampled from a normal distribution with mean ```0``` and standard deviation ```500```. To process the raw data, simply run the following command:
+```
+python process_samples.py
+```
+
 ## Training PlanTT from scratch
 It is possible to train a PlanTT model with your own data using the following script:
 ```
@@ -82,14 +91,14 @@ where ```x_a``` and ```x_b``` are DNA sequences that are either one-hot encoded 
 "X": [0, 0, 0, 0, 1]
 ```
 All files recorded during the script execution are saved under the ```records``` directory in a folder named after the training start time.
-Below, we list the possible arguments that can be given to the script and further provide a usage example.
+Below, we list the possible arguments that can be given to the script and further provide a usage examples.
 
 ### Argument
 - ```--tower (str) - {'cnn', 'ddnabert', 'dnabert'}```:
-    - Choice of the tower architecture used for the training.
+    - Choice of the tower architecture used for the training. See ```src/models/README.md``` for more details.
 - ```--training_data, -t_data (str)```:
     - Path leading to the pickle file with the training data.
-- ```--validation_data, -v_data (str)```:
+- ```--valid_data, -v_data (str)```:
     - Path leading to the pickle file with the validation data.
 - ```--tokens (bool)```:
     - If provided, the data is expected to contain tokenized 6-mers.
@@ -120,21 +129,42 @@ Below, we list the possible arguments that can be given to the script and furthe
 - ```--seed (int)```:
     - Seed value used for training reproducibility. Default to ```1```.
 
-### Usage example
-Here are the commands that were used to train the ```PlanTT-CNN``` model stored under the ```models``` folder.
+### Usage examples
+The following usage examples require you to run ```train_plantt.py``` as written in the step 4 of the ***Environment Setup*** section.
+Here we provided two examples, one with PlanTT-CNN and the other with PlanTT-DDNABERT.
 ```
 python train_plantt.py \
 --tower cnn \
---training_data path1 \
---validation_data path2 \
+--training_data data/encoded_training_samples.pkl \
+--valid_data data/encoded_validation_samples.pkl \
 --train_batch_size 32 \
---valid_batch_size 500 \
+--valid_batch_size 32 \
 --lr 5e-5 \
---max_epochs 200 \
---patience 20 \
+--max_epochs 20 \
+--patience 15 \
+--milestones 8 10 12 \
 --gamma 0.75 \
 --weight_decay 1e-2 \
---dropout 0
+--dropout 0 \
+--memory_frac 1 
+```
+
+```
+python train_plantt.py \
+--tower ddnabert \
+--training_data data/tokenized_training_samples.pkl \
+--valid_data data/tokenized_validation_samples.pkl \
+--tokens \
+--train_batch_size 16 \
+--valid_batch_size 16 \
+--lr 5e-5 \
+--max_epochs 20 \
+--patience 15 \
+--milestones 8 10 12 \
+--gamma 0.75 \
+--weight_decay 1e-2 \
+--freeze_method keep_last \
+--memory_frac 1 
 ```
 
 
