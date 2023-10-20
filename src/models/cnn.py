@@ -156,7 +156,7 @@ class CNN1D(Tower):
         # (BATCH SIZE, 5, SEQ LENGTH) -> (BATCH SIZE, SEQ LENGTH/8)
         return self.__conv_blocks(seq).squeeze(dim=1)
 
-class PNASCNN(nn.Module):
+class WCNN(nn.Module):
     """
     CNN model based on the architecture proposed in: 
     
