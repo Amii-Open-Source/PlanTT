@@ -78,7 +78,7 @@ if __name__ == '__main__':
     plantt = PlanTT(tower=CNN1D(seq_length=3000, feature_dropout=0, dropout=0),
                     head=SumHead(regression=True))
 
-    plantt.load_state_dict(load(join(TRAINED_MODELS, 'planttcnn.pt')))
+    plantt.load_state_dict(load(join(TRAINED_MODELS, 'planttcnn.pt'), map_location=dev))
 
     # Find the editing strategy
     edits = get_editing_strategy(plantt=plantt,
