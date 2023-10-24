@@ -75,12 +75,12 @@ In the ```data``` folder of the repository, we provided raw data samples into ``
 python process_samples.py
 ```
 
-## Training PlanTT from scratch
-It is possible to train a PlanTT model with your own data using the following script:
+## Training PlanTT from scratch (GPU required)
+It is possible to train a PlanTT model with your own data using the following command:
 ```
-train_plantt.py
+python train_plantt.py
 ```
-Pickle files containing respectively the training set and the validation set are required. The latter must match the following format:
+**Along with a GPU**, pickle files containing respectively the training set and the validation set are required. The latter must match the following format:
 ```
 with open(path, 'rb') as file:
         x_a, x_b, y = load(file)
