@@ -4,9 +4,9 @@ Authors: Nicolas Raymond
 Description: Stores generic blocks that can be integrated into neural network architectures.
 """
 
-from torch import abs, cat, sign, sqrt, stack, Tensor, where
+from torch import abs, cat, sign, sqrt, Tensor, where
 from torch.nn import AvgPool1d, Conv1d, Conv2d, BatchNorm1d, Dropout, Dropout1d, \
-    Identity, LeakyReLU, Linear, MaxPool1d, Module, ModuleList, ReLU, Sequential
+    Identity, LeakyReLU, Linear, MaxPool1d, Module, ModuleList, Sequential
 from torch.nn.functional import softmax
 
 

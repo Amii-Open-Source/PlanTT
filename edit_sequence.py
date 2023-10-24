@@ -6,6 +6,7 @@ Description: This file stores a program returning a list of singe-base edits
 """
 from os.path import join
 from torch import load, device
+from torch.backends import cudnn
 from torch.cuda import is_available
 from warnings import warn
 
@@ -16,9 +17,7 @@ from src.models.cnn import CNN1D
 from src.models.head import SumHead
 from src.models.plantt import PlanTT
 from src.utils.gene_editing import get_editing_strategy
-
-# Batch size used to generate the embeddings of the single-base variations
-BATCH_SIZE: int = 1000
+from src.utils.reproducibility import SEED, set_seed
 
 
 def validate_sequence_format(seq: str) -> None:
@@ -46,10 +45,16 @@ if __name__ == '__main__':
 
     # Set the device
     if is_available():
-        dev = device('cuda')
+        dev = device('cuda:0')
+        cudnn.deterministic = True
+        nb_gpu = 1
     else:
         warn('No GPU was found, expect the process to be slower.')
         dev = device('cpu')
+        nb_gpu = 0
+
+    # Set seed for reproducibility
+    set_seed(seed_value=SEED, n_gpu=nb_gpu)
 
     # Ask for the promoter sequence
     promoter = input('\nEnter the 1500bp sequence representing the promoter region: ').upper()
@@ -62,6 +67,10 @@ if __name__ == '__main__':
     # Ask for the budget of single-base edits
     budget = int(input('\nEnter the maximal number of single-base edits that can be applied: '))
 
+    # Ask for the batch size
+    bs = input('\nEnter the maximal batch size that can be handled by your device (default=1000): ')
+    bs = int(bs) if len(bs) != 0 else 1000
+
     # Concatenate both sequence and apply one-hot encoding
     encoded_seq = nucleotide_to_onehot(seq=promoter+terminator).permute(1, 0)
 
@@ -69,14 +78,14 @@ if __name__ == '__main__':
     plantt = PlanTT(tower=CNN1D(seq_length=3000, feature_dropout=0, dropout=0),
                     head=SumHead(regression=True))
 
-    plantt.load_state_dict(load(join(TRAINED_MODELS, 'planttcnn.pt')))
+    plantt.load_state_dict(load(join(TRAINED_MODELS, 'planttcnn.pt'), map_location=dev))
 
     # Find the editing strategy
     edits = get_editing_strategy(plantt=plantt,
                                  seq=encoded_seq,
                                  dev=dev,
                                  max_edits=budget,
-                                 batch_size=BATCH_SIZE)
+                                 batch_size=bs)
 
     # Print the results
     print('\nList of edits found: \n')

@@ -13,7 +13,7 @@ from pickle import load as pkload
 from time import time
 from torch import device
 from torch.backends import cudnn
-from torch.cuda import is_available, set_per_process_memory_fraction, device_count
+from torch.cuda import is_available, set_per_process_memory_fraction
 
 # Project imports
 from settings.paths import RECORDS

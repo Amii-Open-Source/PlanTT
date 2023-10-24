@@ -41,11 +41,15 @@ Now that the repostiory is cloned, move to the ```settings``` directory and crea
 using the provided ```.yml``` file.
 ```
 cd PlanTT/settings/
+```
+```
 conda env create --file environment.yml
 ```
 Once the environment is created, activate it and return to the root of the project.
 ```
 conda activate plantt
+```
+```
 cd ..
 ```
 
@@ -174,14 +178,13 @@ PlanTT can be used to generate a list of single-base modifications that can be a
 <img width="722" alt="features" src="https://github.com/AmiiThinks/PlanTT/assets/122919943/69b7ded5-8e27-42e4-b0bd-e6685cffd9d9">
 
 
-To run the program, simply enter the command ```python edit_sequence.py``` and fill the requested information in the terminal. An example of output is shown below for an experiment with a budget of ```4``` single-base edits and randomly generated terminator and promoter sequences.
+To run the program, simply enter the command ```python edit_sequence.py``` and fill the requested information in the terminal. An example of output is shown below for an experiment with a budget of ```4``` single-base edits, a batch size of ```1000```, and a randomly generated sequence used as the promoter and the terminator (see ```data/example_seq.txt```).
 
 Here is the terminal output:  
 
-<img width="541" alt="program_output" src="https://github.com/AmiiThinks/PlanTT/assets/122919943/7b267016-5dec-48ce-ba03-102b44b119df">
-
+<img width="532" alt="program_output" src="https://github.com/AmiiThinks/PlanTT/assets/122919943/aee3332b-3c32-4b7b-b2cd-b90a4bc18ce3">
 
 Here is the document ```edit_2.pdf``` mentioned in the last figure: 
 
+<img width="1056" alt="program_edit_2" src="https://github.com/AmiiThinks/PlanTT/assets/122919943/4d2aee25-36b7-4dd7-9ef9-be5b67712e0b">
 
-<img width="846" alt="program_edit_2" src="https://github.com/AmiiThinks/PlanTT/assets/122919943/101e7a76-0d5e-4b90-8539-aa3dd1dbd5f9">
