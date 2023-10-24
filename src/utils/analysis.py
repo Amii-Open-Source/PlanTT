@@ -6,9 +6,7 @@ Description: Stores functions dedicated to the analysis of experiment results.
 
 from matplotlib import pyplot as plt
 from numpy import array, arange
-from pandas import read_csv
 from seaborn import heatmap
-from scipy.stats import ttest_rel
 
 
 def save_progress_figure(train_scores: array,
