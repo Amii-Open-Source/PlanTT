@@ -41,11 +41,15 @@ Now that the repostiory is cloned, move to the ```settings``` directory and crea
 using the provided ```.yml``` file.
 ```
 cd PlanTT/settings/
+```
+```
 conda env create --file environment.yml
 ```
 Once the environment is created, activate it and return to the root of the project.
 ```
 conda activate plantt
+```
+```
 cd ..
 ```
 
