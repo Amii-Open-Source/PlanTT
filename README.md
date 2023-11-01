@@ -182,9 +182,10 @@ To run the program, simply enter the command ```python edit_sequence.py``` and f
 
 Here is the terminal output:  
 
-<img width="532" alt="program_output" src="https://github.com/AmiiThinks/PlanTT/assets/122919943/aee3332b-3c32-4b7b-b2cd-b90a4bc18ce3">
+<img width="537" alt="program_output" src="https://github.com/AmiiThinks/PlanTT/assets/122919943/622c549a-dc36-476f-9b46-deee5759f304">
+
 
 Here is the document ```edit_2.pdf``` mentioned in the last figure: 
 
-<img width="1056" alt="program_edit_2" src="https://github.com/AmiiThinks/PlanTT/assets/122919943/4d2aee25-36b7-4dd7-9ef9-be5b67712e0b">
+<img width="862" alt="program_edit_2" src="https://github.com/AmiiThinks/PlanTT/assets/122919943/e56f4fab-057f-4c41-963f-682df3be3caf">
 
