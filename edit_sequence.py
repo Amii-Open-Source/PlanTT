@@ -22,7 +22,7 @@ from src.utils.reproducibility import SEED, set_seed
 
 def validate_sequence_format(seq: str) -> None:
     """
-    Validates if a DNA sequence passed a as string meets specific criteria.
+    Validates if the DNA sequence passed a as string meets specific criteria.
  
     The sequence is considered valid if it has exactly 1500 characters
     and each character is either 'A', 'C', 'G', 'T', 'N', or 'X'.
