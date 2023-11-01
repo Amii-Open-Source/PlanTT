@@ -170,12 +170,12 @@ def predict_editing_impact(plantt: Module,
             while start_idx < VARIATIONS_NB:
                 batch = var_embeddings[start_idx:(start_idx+batch_size)].to(dev)
                 with autocast(device_type=dev.type, dtype=float16):
-                    predictions.append(plantt.head(batch, seq_emb).to('cpu'))
+                    predictions.append(plantt.head(seq_emb, batch).to('cpu'))
                 start_idx += batch_size
         else:
             while start_idx < VARIATIONS_NB:
                 batch = var_embeddings[start_idx:(start_idx+batch_size)]
-                predictions.append(plantt.head(batch, seq_emb))
+                predictions.append(plantt.head(seq_emb, batch))
                 start_idx += batch_size
 
         # Reshape the predictions in a grid of shape (4, 3000) where each
