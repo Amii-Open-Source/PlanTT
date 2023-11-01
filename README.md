@@ -173,7 +173,9 @@ python train_plantt.py \
 
 
 ## Single-base gene editing
-PlanTT can be used to generate a list of single-base modifications that can be applied to a gene to increase its expression. The file ```edit_sequence.py``` offers a program that uses a trained version of ```PlanTT-CNN``` to generate such list for any gene. The procedure requires the user to provide the promoter and terminator sequences of the gene of interest (see figure below).  
+PlanTT can be used to generate a list of single-base modifications that can be applied to a gene to increase its expression. The file ```edit_sequence.py``` offers a program that uses a trained version of ```PlanTT-CNN``` to generate such list for any gene. The weights of the model are stored in ```models/planttcnn.pt```.   
+
+The gene editing procedure requires the user to provide the promoter and terminator sequences of the gene of interest (see figure below). 
 
 <img width="722" alt="features" src="https://github.com/AmiiThinks/PlanTT/assets/122919943/69b7ded5-8e27-42e4-b0bd-e6685cffd9d9">
 
