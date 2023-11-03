@@ -219,7 +219,7 @@ if __name__ == '__main__':
 
     # Save the training time and the number of epochs
     results = {'training_time': round((time() - start)/60, 2),
-               'total_epochs': last,
+               'total_epochs': last + 1,
                'best_epoch': best}
 
     # Recover the final training and validation metrics obtained
