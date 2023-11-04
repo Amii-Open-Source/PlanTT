@@ -4,7 +4,7 @@ This code repository is associated to the paper entitled *"PlanTT: a two-tower c
 
 <p xmlns:cc="http://creativecommons.org/ns#" xmlns:dct="http://purl.org/dc/terms/"><span property="dct:title">PlanTT</span> is licensed under <a href="http://creativecommons.org/licenses/by-nc/4.0/?ref=chooser-v1" target="_blank" rel="license noopener noreferrer" style="display:inline-block;">CC BY-NC 4.0<img style="height:22px!important;margin-left:3px;vertical-align:text-bottom;" src="https://mirrors.creativecommons.org/presskit/icons/cc.svg?ref=chooser-v1"><img style="height:22px!important;margin-left:3px;vertical-align:text-bottom;" src="https://mirrors.creativecommons.org/presskit/icons/by.svg?ref=chooser-v1"><img style="height:22px!important;margin-left:3px;vertical-align:text-bottom;" src="https://mirrors.creativecommons.org/presskit/icons/nc.svg?ref=chooser-v1"></a></p>
 
-<img width="802" alt="PlanTT drawio" src="https://github.com/AmiiThinks/PlanTT/assets/122919943/5e30bfe2-873b-4ec8-9355-9f34486a2dd4">
+<img width="1038" alt="PlanTT" src="https://github.com/Amii-Open-Source/PlanTT/assets/122919943/b61d08f8-df94-44fc-aae4-57cd57759663">
 
 
 ## Project Tree :deciduous_tree:
@@ -179,17 +179,18 @@ PlanTT can be used to generate a list of single-base modifications that can be a
 
 The gene editing procedure requires the user to provide the promoter and terminator sequences of the gene of interest (see figure below). 
 
-<img width="722" alt="features" src="https://github.com/AmiiThinks/PlanTT/assets/122919943/69b7ded5-8e27-42e4-b0bd-e6685cffd9d9">
+<img width="720" alt="features" src="https://github.com/Amii-Open-Source/PlanTT/assets/122919943/19d95a3d-7492-48a3-838f-f09afb763028">
 
 
 To run the program, simply enter the command ```python edit_sequence.py``` and fill the requested information in the terminal. An example of output is shown below for an experiment with a budget of ```4``` single-base edits, a batch size of ```1000```, and a randomly generated sequence used as the promoter and the terminator (see ```data/example_seq.txt```).
 
 Here is the terminal output:  
 
-<img width="537" alt="program_output" src="https://github.com/AmiiThinks/PlanTT/assets/122919943/622c549a-dc36-476f-9b46-deee5759f304">
+<img width="525" alt="output" src="https://github.com/Amii-Open-Source/PlanTT/assets/122919943/019596ba-fbfb-4682-9dce-025576cd63c3">
 
 
 Here is the document ```edit_2.pdf``` mentioned in the last figure: 
 
-<img width="862" alt="program_edit_2" src="https://github.com/AmiiThinks/PlanTT/assets/122919943/e56f4fab-057f-4c41-963f-682df3be3caf">
+
+<img width="864" alt="edit_2" src="https://github.com/Amii-Open-Source/PlanTT/assets/122919943/5a419664-e12e-4a74-a4de-0a50b17ffedf">
 
